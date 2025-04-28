@@ -69,15 +69,13 @@ const images = [
     const ul = document.querySelector('.gallery')
 
 
+   let markUp = '';
+
 
     for(let i = 0; i < images.length; i++){
-
-        // const img = document.createElement('img');
-
-
-        ul.insertAdjacentHTML('afterbegin',`
+        markUp += `
                     <li class="gallery-item">
-  <a class="gallery-link" href="large-image.jpg" disabled>
+  <a class="gallery-link" href="${images[i].original}" disabled>
     <img
       class="gallery-image"
       src="${images[i].preview}"
@@ -85,56 +83,52 @@ const images = [
       alt="${images[i].description} "
     />
   </a>
-</li>
-
-            
-            
-            `)
-        
-        
-
-        
-        
+</li>           
+            `
+    
     }
+
+    ul.insertAdjacentHTML('afterbegin', markUp);
+
+    
+    
+    function onUlClick(event){
+      
+      event.preventDefault();
+
+      const clickedImage = event.target.closest('img');
+
+      if(!clickedImage){
+        return;
+      }
+
+      const bigImage = clickedImage.getAttribute('data-source');
+
+      const instance = basicLightbox.create(`
+        <div class="modal">
+            <img src="${bigImage}">
+        </div>
+    `, {
+      onclose:() =>{
+        
+        ul.removeEventListener('click', onUlClick);
+      }
+    })
+    
+    instance.show();
+
+
+    
+    };
+
+    
+
+
+    ul.addEventListener('click', onUlClick);
+    
    
 
-    ul.addEventListener('click', (event) => {
-      event.preventDefault();
-        const clickedImage = event.target.closest('img')
-        
-
-        if(!clickedImage){
-            return;
-        }
-
-        const bigImage = clickedImage.getAttribute('data-source');
-        
-
-        
-        
-
-
-        const instance = basicLightbox.create(`
-          <div class="modal">
-            <div class="modal-content">
-              <img src="${bigImage}" class="modal-image" />
-            </div>
-          </div>
-        `, {
-          
-          onShow: (instance) =>{
-            const modalContent = instance.element().querySelector('.modal');
-            modalContent.addEventListener('click', (event) =>{
-              if(!event.target.classList.contains('.modal-image')){
-                instance.close();
-              }
-            });
-          }
-        });
-
-          instance.show()
-      });
-
+    
 
 
     

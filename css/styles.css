@@ -28,7 +28,7 @@ ul{
     width: calc((100% - 48px) / 4);
 }
 
-img{
+.gallery-image{
     width: 360px;
     height: 200px;
 }
